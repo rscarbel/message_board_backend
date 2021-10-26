@@ -7,8 +7,16 @@ router.get('/messages', async (req, res) => {
       const messages = await Message.find({});
       res.json(messages);
   } catch (error) {
-      console.log(error);
-      res.status(500).json('Your request could not be completed');
+      res.status(500).json({error: 'Your request could not be completed'});
+  }
+});
+
+router.post('/message', async (req, res) => {
+  try {
+      await Message.create(req.body);
+      res.json({ success: true });
+  } catch (error) {
+      res.status(400).json({ success: false });
   }
 });
 
