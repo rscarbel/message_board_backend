@@ -1,7 +1,9 @@
 const mongoose = require ('mongoose');
 const express = require ('express');
+const cors = require('cors');
+const morgan = require('morgan');
 const app = express()
-require 'dotenv'.config()
+require ('dotenv').config()
 
 const DATABASE_URL = process.env.DATABASE_URL;
 
@@ -10,6 +12,10 @@ const db = mongoose.connection;
 
 db.on('connected', () => console.log('Connected to MongoDB'));
 db.on('error', (error) => console.log('MongoDB Error ' + error.message));
+
+app.use(express.json());
+app.use(cors());
+app.use(morgan('dev'))
 
 const PORT = process.env.PORT || 80;
 app.listen(PORT, () => {
