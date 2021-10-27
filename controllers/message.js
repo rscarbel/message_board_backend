@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
+const BadWords = require('../scripts/BadWords')
 
 router.get('/messages', async (req, res) => {
   try {
@@ -12,12 +13,16 @@ router.get('/messages', async (req, res) => {
 });
 
 router.post('/message', async (req, res) => {
-  try {
-      await Message.create(req.body);
-      res.json({ success: true });
-  } catch (error) {
-      res.status(400).json({ success: false });
-  }
+    if(req.body.username.match(BadWords) || req.body.message.match(BadWords)) {
+        res.status(403).json({success : false})
+    } else {
+        try {
+            await Message.create(req.body);
+            res.json({ success: true });
+        } catch (error) {
+            res.status(400).json({ success: false });
+        }
+    }
 });
 
 router.get('*', (req,res) => {
