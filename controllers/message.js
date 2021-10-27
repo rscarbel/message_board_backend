@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const Message = require('../models/Message');
-const BadWords = require('../scripts/BadWords')
+const containsBadWords = require('../scripts/containsBadWords')
 
 router.get('/messages', async (req, res) => {
   try {
@@ -13,7 +13,7 @@ router.get('/messages', async (req, res) => {
 });
 
 router.post('/message', async (req, res) => {
-    if(req.body.username.match(BadWords) || req.body.message.match(BadWords)) {
+    if(containsBadWords(req.body)) {
         res.status(403).json({success : false})
     } else {
         try {
